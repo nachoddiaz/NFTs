@@ -1,4 +1,5 @@
 const { network } = require("hardhat")
+const { DECIMALS, INIT_ANSWER } = require("../helper-hardhat-config")
 
 /* estas dos variables se las pasamos al constructor de VRFCoordinatorV2Mocks */
 const BASE_FEE = ethers.utils.parseEther("0.25") //Premium in the docs, price of each request in LINK
@@ -19,6 +20,14 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
             log: true,
             //Para saber que argumentos pasarle al contrato lo buscamos en github o node_modules
             args: [BASE_FEE, GAS_PRICE_LINK],
+        })
+
+        await deploy("MockV3Aggregator", {
+            contract: "MockV3Aggregator",
+            from: deployer,
+            log: true,
+            //Para saber que argumentos pasarle al contrato lo buscamos en github o node_modules
+            args: [DECIMALS, INIT_ANSWER],
         })
         log("Mocks deployed!!!!")
         log(

@@ -3,7 +3,7 @@ const networkConfig = {
         name: "ethereum mainnet",
          
     },
-   /*  4: { //Configuramos la red Rinkeby con su chainID, nombre y dirección
+    4: { //Configuramos la red Rinkeby con su chainID, nombre y dirección
         name: "rinkeby",
         vrfCoordinatorV2: "0x6168499c0cFfCaCD319c818142124B7A15E857ab",
         precioEntrada : "5000000000000000",
@@ -11,7 +11,7 @@ const networkConfig = {
         subscriptionId: "10486",
         callbackGasLimit: "500000",
         interval: "30" //son 30 segundos
-    }, */
+    },
     137:{
         name: "polygon mainnet",
         ETHUSDPrice: "0xF9680D99D6C9589e2a93a78A04A279e509205945",

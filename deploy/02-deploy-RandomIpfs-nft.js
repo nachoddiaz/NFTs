@@ -24,7 +24,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_FUNDS)
     } else {
         //Si no estamos en devChain, desplegamos normal
-        vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"]
+        vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2
+        subscriptionId = networkConfig[chainId].subscriptionId
     }
 
     const arguments = [
@@ -36,7 +37,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         networkConfig[chainId]["mintFee"],
     ]
 
-    const RandomIpfsNft = await deploy("RandomIpfsNft", {
+    const RandomIpfs = await deploy("RandomIpfsNft", {
         from: deployer,
         args: arguments,
         log: true,
@@ -44,7 +45,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     })
     if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
         log("Verificando....")
-        await verify(RandomIpfsNft.address, arguments)
+        await verify(RandomIpfs.address, arguments)
     }
     log("---------------------------------------------")
 }
