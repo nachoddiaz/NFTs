@@ -1,5 +1,5 @@
 const { networkConfig, devChains } = require("../helper-hardhat-config.js")
-const {network, ethers } = require("hardhat")
+const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify.js")
 
 /* Necesitamos pasarle fondos al contrato VRF para fondear la sbscripcion */
@@ -10,7 +10,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-
 
     /* if (chainId == 31337) {
         //Si estamos en devChain, desplegamos mock
@@ -26,7 +25,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"]
     } */
 
-    const arguments = [] 
+    const arguments = []
 
     const BasicNFT = await deploy("BasicNFT", {
         from: deployer,
@@ -34,7 +33,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
-    if (chainId != 31337 && process.env.ETHERSCAN_API_KEY ){
+    if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
         log("Verificando....")
         await verify(BasicNFT.address, arguments)
     }

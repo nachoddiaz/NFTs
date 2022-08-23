@@ -31,7 +31,6 @@ module.exports = {
             url: Goerly_URL,
             accounts: [PRIVATE_KEY],
         },
-
     },
     gasReporter: {
         enabled: true,
@@ -39,7 +38,7 @@ module.exports = {
         noColors: true,
         currency: "USD",
         coinmarketcap: CMC_API_KEY,
-        token: "MATIC"
+        token: "MATIC",
     },
     etherscan: {
         apiKey: process.env.ETHERSCAN_API_KEY,
@@ -53,7 +52,7 @@ module.exports = {
             default: 1,
         },
     },
-    mocha:{
+    mocha: {
         timeout: 1000000, // está en ms
-    }
+    },
 }
