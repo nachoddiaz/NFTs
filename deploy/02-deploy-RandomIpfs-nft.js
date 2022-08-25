@@ -13,6 +13,16 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     let vrfCoordinatorV2Address, subscriptionId
 
+    //We need the IPFS hashes of our imgs
+
+    if(process.env.UPLOAD_TO_PINATA == "true"){
+        tokenURI = await handleTokenURI()
+    }
+
+    //1. With our own IPFS node
+    //2. Using Pinata
+    //3. nft.storage
+
     if (chainId == 31337) {
         //Si estamos en devChain, desplegamos mock
         const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
@@ -48,6 +58,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         await verify(RandomIpfs.address, arguments)
     }
     log("---------------------------------------------")
+}
+
+async function handleTokenURI() {
+    tokenURI = []
+
+
+    return tokenURI
 }
 
 module.exports.tags = ["all", "RandomIpfsNft"]
