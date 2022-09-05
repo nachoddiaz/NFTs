@@ -10,7 +10,8 @@ const networkConfig = {
         keyHash: "0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc", 
         subscriptionId: "10486",
         callbackGasLimit: "500000",
-        interval: "30" //son 30 segundos
+        interval: "30", //son 30 segundos
+        mintFee : "50000000000000000",
     },
     137:{
         name: "polygon mainnet",

@@ -81,7 +81,7 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         NFTType tipo = getRarityFromModdedRnd(moddedRnd);
         _safeMint(NFTOwner, newTokenId);
         _setTokenURI(newTokenId, s_NFTTokenURI[uint256(tipo)]);
-        s_tokenCounter++;
+        s_tokenCounter += s_tokenCounter;
         emit NFTMinted(tipo, NFTOwner);
         
     }

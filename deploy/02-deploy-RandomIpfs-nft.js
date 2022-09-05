@@ -1,9 +1,24 @@
 const { networkConfig, devChains } = require("../helper-hardhat-config.js")
 const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify.js")
+const { storeImages, storeTokenMetadata } = require("../utils/uploadToPinata.js")
 
 /* Necesitamos pasarle fondos al contrato VRF para fondear la sbscripcion */
 const VRF_FUNDS = "1000000000000000000000"
+const imagesLocation = "./images/randomNFT"
+
+const metadataTemplate = {
+    name: "",
+    description: "",
+    image: "",
+    //With that we can add stats to the NFT
+    /* attributes:[
+        {
+            trait_type: "Atack",
+            value:"100"
+        }
+    ] */
+}
 
 //Podemos resumir las dos lineas anteriores en una sola
 module.exports = async ({ getNamedAccounts, deployments }) => {
@@ -11,11 +26,17 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
 
+    let tokenURI = [
+        "ipfs://Qme1TGnh4KT5iedGQCyRnUN3ytxZBmrneJ8jVRoE1XV7a9",
+        "ipfs://QmeD3R6XTivRGNRQSwg756ebxS7qKc1CYheJDikHFyrfHL",
+        "ipfs://QmYL8GLKTmRtYebwMQ9fdUwDSoEgLwzggjcuF9AaZMV1zH",
+    ]
+
     let vrfCoordinatorV2Address, subscriptionId
 
     //We need the IPFS hashes of our imgs
 
-    if(process.env.UPLOAD_TO_PINATA == "true"){
+    if (process.env.UPLOAD_TO_PINATA == "true") {
         tokenURI = await handleTokenURI()
     }
 
@@ -43,11 +64,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         subscriptionId,
         networkConfig[chainId]["gasLane"],
         networkConfig[chainId]["callbackGasLimit"],
-        networkConfig[chainId]["NFTTokenURI"],
+        tokenURI,
         networkConfig[chainId]["mintFee"],
     ]
 
-    const RandomIpfs = await deploy("RandomIpfsNft", {
+    const RandomIpfs = await deploy("RandomIpfsNFT", {
         from: deployer,
         args: arguments,
         log: true,
@@ -62,8 +83,22 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
 async function handleTokenURI() {
     tokenURI = []
+    const { responses: imageUploadResponses, files } = await storeImages(imagesLocation)
 
+    for (imageUploadResponsesIndex in imageUploadResponses) {
+        //The 3 points unpack the data of the following variable
+        let tokenUriMetadata = { ...metadataTemplate }
+        tokenUriMetadata.name = files[imageUploadResponsesIndex].replace(".png", "")
+        tokenUriMetadata.description = `The logo of Onix ${tokenUriMetadata.name}`
+        tokenUriMetadata.image = `ipfs://${imageUploadResponses[imageUploadResponsesIndex].IpfsHash}`
+        console.log(`Uploading ${tokenUriMetadata.name}`)
 
+        //Store JSON to Pinata
+        const metadataUploadResponse = await storeTokenMetadata(tokenUriMetadata)
+        tokenURI.push(`ipfs://${metadataUploadResponse.IpfsHash}`)
+    }
+    console.log("Token URIs Uploades")
+    console.log(tokenURI)
     return tokenURI
 }
 
