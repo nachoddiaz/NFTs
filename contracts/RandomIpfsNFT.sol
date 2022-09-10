@@ -10,13 +10,14 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 error RandomIpfsNFT__RangeOutOfBounds();
 error RandomIpfsNFT__NeedMoreETH();
 error RandomIpfsNFT__WithdrawFailed();
+error RandomIpfsNFT__AlreadyInitialized();
 
 contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     //Type Declaration
     enum NFTType {
-        PUG,
-        SHIBA_INU,
-        ST_BERNARD
+        Definitivo,
+        BandW,
+        Primitivo
     }
 
     //ChainLink VRF Variables
@@ -35,6 +36,7 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     uint256 internal constant MAX_CHANCE_VALUE = 100;
     string[] internal s_NFTTokenURI;
     uint256 internal immutable i_mintFee;
+    bool private s_initialized;
 
 
     //Events 
@@ -53,7 +55,7 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         i_subscriptionId = subscriptionId;
         i_gasLane = gasLane;
         i_callbackGasLimit = callbackGasLimit;
-        s_NFTTokenURI = NFTTokenURI;
+        _initializeContract(NFTTokenURI);
         i_mintFee = mintFee;
     }
 
@@ -110,6 +112,13 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return [10, 30, MAX_CHANCE_VALUE];
     }
 
+    function _initializeContract(string[3] memory NFTTokenURI) private {
+        if (s_initialized) {
+            revert RandomIpfsNFT__AlreadyInitialized();
+        }
+        s_NFTTokenURI = NFTTokenURI;
+        s_initialized = true;
+    }
     //Getters
 
     function getTokenCounter() public view returns (uint256) {
@@ -118,5 +127,17 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function getMintFee() public view returns (uint256) {
         return i_mintFee;
+    }
+
+     function getKeyHash() public view returns (bytes32) {
+        return i_gasLane;
+    }
+
+    function getTokenUris(uint256 index) public view returns (string memory) {
+        return s_NFTTokenURI[index];
+    }
+
+    function getInitialized() public view returns (bool) {
+        return s_initialized;
     }
 }

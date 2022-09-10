@@ -2,14 +2,14 @@ const { ethers, deployments, getNamedAccounts, network } = require("hardhat")
 const { assert, expect } = require("chai")
 const { devChains, networkConfig } = require("../../helper-hardhat-config")
 
-/* !devChains.includes(network.name)
+!devChains.includes(network.name)
     ? describe.skip
-    : */ describe("BasicNFT", function () {
+    : describe("BasicNFT", function () {
     let BasicNFT
 
     beforeEach(async function () {
         deployer = (await getNamedAccounts()).deployer
-        await deployments.fixture(["all"])
+        await deployments.fixture(["BasicNFT"])
         BasicNFT = await ethers.getContract("BasicNFT", deployer)
     })
 
@@ -17,9 +17,9 @@ const { devChains, networkConfig } = require("../../helper-hardhat-config")
         it("initializes the NFT", async function () {
             const s_tokenCounter = await BasicNFT.getTokenCounter()
             assert.equal(s_tokenCounter.toString(), "0")
-            const name = await basicNft.name()
+            const name = await BasicNFT.name()
             assert.equal(name, "Onix")
-            const symbol = await basicNft.symbol()
+            const symbol = await BasicNFT.symbol()
             assert.equal(symbol, "ONIX")
         })
     })

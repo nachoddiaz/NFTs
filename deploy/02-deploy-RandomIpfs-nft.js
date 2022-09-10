@@ -50,7 +50,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
         //Creamos la subscripción a VRF de manera progrmática
         const TXResponse = await vrfCoordinatorV2Mock.createSubscription()
-        const TXReceipt = await TXResponse.wait(1)
+        const TXReceipt = await TXResponse.wait()
         subscriptionId = TXReceipt.events[0].args.subId
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_FUNDS)
     } else {
@@ -74,6 +74,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
+
+    if (chainId == 31337) {
+        const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
+        vrfCoordinatorV2Mock.addConsumer(subscriptionId.toNumber(), RandomIpfs.address)
+    }
+
     if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
         log("Verificando....")
         await verify(RandomIpfs.address, arguments)
@@ -102,4 +108,4 @@ async function handleTokenURI() {
     return tokenURI
 }
 
-module.exports.tags = ["all", "RandomIpfsNft"]
+module.exports.tags = ["all", "RandomIpfsNft", "main"]
