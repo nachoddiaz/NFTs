@@ -57,7 +57,7 @@ const { devChains, networkConfig } = require("../../helper-hardhat-config")
                   await new Promise(async (resolve, reject) => {
                     RandomIpfsNFT.once("NFTMinted", async () => {
                           try {
-                              const TokenUri = await RandomIpfsNFT.TokenUri("0")
+                              const TokenUri = await RandomIpfsNFT.getTokenUris(0)
                               const tokenCounter = await RandomIpfsNFT.getTokenCounter()
                               assert.equal(TokenUri.toString().includes("ipfs://"), true)
                               assert.equal(tokenCounter.toString(), "1")
@@ -99,7 +99,7 @@ const { devChains, networkConfig } = require("../../helper-hardhat-config")
               })
               it("Reverts if moddedRnd >= 100", async function () {
                   const expectedValue = await expect(
-                      RandomIpfsNFT.getRarityFromModdedRnd(100)
+                      RandomIpfsNFT.getRarityFromModdedRnd(110)
                   ).to.be.revertedWith("RandomIpfsNFT__RangeOutOfBounds")
               })
           })

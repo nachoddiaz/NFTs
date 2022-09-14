@@ -77,13 +77,13 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     function fulfillRandomWords(uint256 requestId, uint256[] memory RandomWords) internal override {
         address NFTOwner = s_requestIdToSender[requestId];
         uint256 newTokenId = s_tokenCounter;
+        s_tokenCounter = s_tokenCounter + 1;
 
         //coge el resto entre la primera palabra random y el máximo número de probabilidad
         uint256 moddedRnd = RandomWords[0] % MAX_CHANCE_VALUE;
         NFTType tipo = getRarityFromModdedRnd(moddedRnd);
         _safeMint(NFTOwner, newTokenId);
         _setTokenURI(newTokenId, s_NFTTokenURI[uint256(tipo)]);
-        s_tokenCounter += s_tokenCounter;
         emit NFTMinted(tipo, NFTOwner);
         
     }
@@ -100,7 +100,7 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256 cumulativeSum = 0;
         uint256[3] memory chanceArray = getChanceArray();
         for (uint256 i = 0; i < chanceArray.length; i++) {
-            if (moddedRnd >= cumulativeSum && moddedRnd < cumulativeSum + chanceArray[i]) {
+            if (moddedRnd >= cumulativeSum && moddedRnd < chanceArray[i]) {
                 return NFTType(i);
             }
             cumulativeSum += chanceArray[i];

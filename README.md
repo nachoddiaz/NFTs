@@ -14,4 +14,13 @@
 
 2.3 Host in IPFS
 
+**Pros & Cons of IPFS**
+-Pros: Cheaper
+-Cons: we depend on someone who pins our data
+        Not so decentralized
+
 ## 3. Dynamic SVG NFT -> Hosted 100% onchain
+-Pros: the data is on-chain
+-Cons: much more expensive
+
+3.1 If ETH price is below some price show X, else show Y
