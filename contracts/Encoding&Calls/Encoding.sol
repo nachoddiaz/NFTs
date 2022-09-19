@@ -62,3 +62,4 @@ contract Encoding{
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
         require(success, "Transfer Failed");
     }
+}

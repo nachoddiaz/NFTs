@@ -117,3 +117,4 @@ contract CallFunctionWithoutContract {
         );
         return (bytes4(returnData), success);
     }
+}
