@@ -12,6 +12,11 @@ const networkConfig = {
         callbackGasLimit: "500000",
         interval: "30", //son 30 segundos
         mintFee : "50000000000000000",
+        ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"
+    },
+    5: {
+        name : "goerly",
+        ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"
     },
     137:{
         name: "polygon mainnet",
