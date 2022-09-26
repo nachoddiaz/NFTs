@@ -11,13 +11,13 @@ contract DynamicSvgNFT is ERC721 {
     //global variables
     uint256 private s_tokenCounter;
     string private i_lowSvg;
-    string private i_hihgSvg;
+    string private i_highSvg;
     string private constant base64EncodedSvgPrefix = "data:image/svg+xml;base64,";
     AggregatorV3Interface internal immutable i_priceFeed;
     mapping(uint256 => int256) public s_tokenIdToHighValue;
 
     //Events
-    event NFTMinted__DynamicSvg(uint256 indexed tokenId, int256 HighValue);
+    event NFTCreated__DynamicSvg(uint256 indexed tokenId, int256 HighValue);
 
     //mint
     //Store the SVG info
@@ -30,7 +30,7 @@ contract DynamicSvgNFT is ERC721 {
     ) ERC721("Dynamic SVG NFT", "DSN") {
         s_tokenCounter = 0;
         i_lowSvg = svgToImageURI(lowSvg);
-        i_hihgSvg = svgToImageURI(hihgSvg);
+        i_highSvg = svgToImageURI(hihgSvg);
         i_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
@@ -45,7 +45,7 @@ contract DynamicSvgNFT is ERC721 {
         s_tokenCounter++;
         _safeMint(msg.sender, s_tokenCounter);
 
-        emit NFTMinted__DynamicSvg(s_tokenCounter, HighValue);
+        emit NFTCreated__DynamicSvg(s_tokenCounter, HighValue);
     }
 
     function _baseURI() internal pure override returns (string memory) {
@@ -59,7 +59,7 @@ contract DynamicSvgNFT is ERC721 {
         (, int256 price, , , ) = i_priceFeed.latestRoundData();
         string memory imageURI = i_lowSvg;
         if (price >= s_tokenIdToHighValue[tokenId]) {
-            imageURI = i_hihgSvg;
+            imageURI = i_highSvg;
         }
 
         //Lo transformamos en string para que sea legible
@@ -90,5 +90,17 @@ contract DynamicSvgNFT is ERC721 {
 
     function getTokenCounter() public view returns (uint256) {
         return s_tokenCounter;
+    }
+
+    function getHighSvg() public view returns (string memory) {
+        return i_highSvg;
+    }
+
+    function getLowSvg() public view returns (string memory) {
+        return i_lowSvg;
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return i_priceFeed;
     }
 }

@@ -15,7 +15,7 @@ const networkConfig = {
         ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"
     },
     5: {
-        name : "goerly",
+        name : "goerli",
         ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"
     },
     137:{
@@ -34,7 +34,7 @@ const networkConfig = {
 
 
 const devChains = ["hardhat", "localhost"]
-const DECIMALS = 8
+const DECIMALS = 18
 const INIT_ANSWER =  200000000000
 
 module.exports ={
