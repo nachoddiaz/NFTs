@@ -1,4 +1,4 @@
-const { networkConfig, devChains } = require("../helper-hardhat-config.js")
+const { networkConfig} = require("../helper-hardhat-config.js")
 const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify.js")
 const fs = require("fs")
@@ -35,4 +35,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log("---------------------------------------------")
 }
 
-module.exports.tags = ["all", "DynamicSvgNFT"]
+module.exports.tags = ["all", "DynamicSvgNFT", "main"]

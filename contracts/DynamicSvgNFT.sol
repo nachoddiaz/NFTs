@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-/* import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol"; */
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "base64-sol/base64.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract DynamicSvgNFT is ERC721 {
+error URI_QueryFor_NonExistentToken();
+
+contract DynamicSvgNFT is ERC721, Ownable {
     //global variables
     uint256 private s_tokenCounter;
     string private i_lowSvg;
@@ -42,8 +43,8 @@ contract DynamicSvgNFT is ERC721 {
 
     function mintNft(int256 HighValue) public {
         s_tokenIdToHighValue[s_tokenCounter] = HighValue;
-        s_tokenCounter++;
         _safeMint(msg.sender, s_tokenCounter);
+        s_tokenCounter++;
 
         emit NFTCreated__DynamicSvg(s_tokenCounter, HighValue);
     }
@@ -54,7 +55,9 @@ contract DynamicSvgNFT is ERC721 {
 
     //We override the tokenURI function of ERC721.sol to adjust it to our pourpose
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "URI Query for nonexistient token");
+        if (!_exists(tokenId)) {
+            revert URI_QueryFor_NonExistentToken();
+        }
 
         (, int256 price, , , ) = i_priceFeed.latestRoundData();
         string memory imageURI = i_lowSvg;
