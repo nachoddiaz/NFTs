@@ -25,6 +25,7 @@ module.exports = async ({ getNamedAccounts }) => {
     const randomipfsnft = await ethers.getContract("RandomIpfsNFT", deployer)
     const mintFee = await randomipfsnft.getMintFee()
     const randomipfsnftTx = await randomipfsnft.requestNft({ value: mintFee.toString() })
+    await randomipfsnftTx.wait(1)
     const randomipfsnftTxReceipt = await randomipfsnftTx.wait(1)
 
     await new Promise(async (resolve, reject) => {
